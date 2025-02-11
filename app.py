@@ -1,6 +1,5 @@
 import tkinter as tk
 
-# Список вопросов и ответов
 questions = {
     (1, 3): [
         ("Что носят евреи мужчины на голове?", "Кипа"),
@@ -49,20 +48,22 @@ current_questions = []
 question_index = 0
 show_answer = False
 category_buttons = {}
+current_category = None
 
-def show_next_question(event):
+def show_next_question(event, popup_window):
     global question_index, show_answer
     # Проверка, если есть вопросы для отображения
     if question_index < len(current_questions):
         if show_answer:
-            label.config(text=f"Ответ: {current_questions[question_index][1]}")
+            popup_window.label.config(text=f"Ответ: {current_questions[question_index][1]}")
             question_index += 1
         else:
-            label.config(text=f"Вопрос: {current_questions[question_index][0]}")
+            popup_window.label.config(text=f"Вопрос: {current_questions[question_index][0]}")
         show_answer = not show_answer
     else:
-        label.config(text="Все вопросы пройдены!")
+        popup_window.label.config(text="Все вопросы пройдены!")
         hide_category_buttons(current_category)  # Прячем кнопки категории, когда все вопросы пройдены
+        popup_window.after(2000, popup_window.destroy)  # Закрыть окно через 2 секунды
 
 def hide_category_buttons(category):
     # Проверяем, существует ли ключ в category_buttons
@@ -82,11 +83,31 @@ def on_button_click(row, col, points):
         current_questions = questions[(row, col)]
         question_index = 0
         show_answer = False
-        label.config(text=f"Вопрос: {current_questions[question_index][0]}")
+
+        # Открываем новое окно для отображения вопросов и ответов
+        popup_window = tk.Toplevel()  # Создаем новое окно
+        popup_window.title(f"Вопросы категории {row},{col}")
+        popup_window.geometry("720x1280")
+
+        # Центрируем окно на экране
+        window_width = 1280
+        window_height = 400
+        screen_width = popup_window.winfo_screenwidth()
+        screen_height = popup_window.winfo_screenheight()
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+        popup_window.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+        popup_window.configure(bg="#1E3F66")
+
+        popup_window.label = tk.Label(popup_window, text=f"Вопрос: {current_questions[question_index][0]}",
+                                      font=("Arial", 20), bg="#1E3F66", fg="white")
+        popup_window.label.pack(pady=20)
         
-    # Если все вопросы пройдены, заменяем кнопку на якорь
-    if question_index >= len(current_questions):
-        hide_category_buttons(current_category)
+        popup_window.bind("<space>", lambda event, win=popup_window: show_next_question(event, win))  # Обработка пробела для переключения вопросов
+        
+        # После завершения всех вопросов в категории, закроется окно
+        show_next_question(None, popup_window)  # Начать с первого вопроса
 
 def create_window():
     global label, category_buttons, frame, current_category
@@ -132,7 +153,6 @@ def create_window():
 
     label = tk.Label(root, text="", font=("Arial", 22), bg="#1E3F66", fg="white")  
     label.pack(pady=20)
-    root.bind("<space>", show_next_question)  
 
     root.mainloop()
 
