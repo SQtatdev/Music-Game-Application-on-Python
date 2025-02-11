@@ -1,5 +1,6 @@
 import tkinter as tk
 
+# Список вопросов и ответов
 questions = {
     (1, 3): [
         ("Что носят евреи мужчины на голове?", "Кипа"),
@@ -36,18 +37,22 @@ questions = {
         ("О чем была прошлая программа?", "Ту би Шват"),
     ],
     (4, 2): [
-        ("Какая команда активнее станцует получает баллы", "Молодцы!"),
+        ("Какая команда активнее станцует - получит баллы", "Молодцы!"),
     ],
     (5, 2): [
         ("Сделайте импровизацию Адам, Ева и яблоко, кто-то Адам, кто-то Ева, кто-то яблоко", "Молодцы!"),
-    ]
+    ],   
 }
 
+# Переменные для текущих вопросов и ответов
+current_questions = []
 question_index = 0
 show_answer = False
+category_buttons = {}
 
 def show_next_question(event):
     global question_index, show_answer
+    # Проверка, если есть вопросы для отображения
     if question_index < len(current_questions):
         if show_answer:
             label.config(text=f"Ответ: {current_questions[question_index][1]}")
@@ -57,22 +62,38 @@ def show_next_question(event):
         show_answer = not show_answer
     else:
         label.config(text="Все вопросы пройдены!")
+        hide_category_buttons(current_category)  # Прячем кнопки категории, когда все вопросы пройдены
+
+def hide_category_buttons(category):
+    # Проверяем, существует ли ключ в category_buttons
+    if category in category_buttons:
+        for button in category_buttons[category]:
+            button.grid_forget()
+    else:
+        print(f"Ключ {category} не найден в category_buttons!")
 
 def on_button_click(row, col, points):
-    global current_questions, question_index, show_answer
+    global current_questions, question_index, show_answer, current_category
+    # Используем кортеж (row, col) для получения правильной категории
+    current_category = (row, col)
+
+    # Проверяем, есть ли вопросы в выбранной категории
     if (row, col) in questions:
         current_questions = questions[(row, col)]
         question_index = 0
         show_answer = False
         label.config(text=f"Вопрос: {current_questions[question_index][0]}")
-    label.config(text=f"Очки: {points}")
+        
+    # Если все вопросы пройдены, заменяем кнопку на якорь
+    if question_index >= len(current_questions):
+        hide_category_buttons(current_category)
 
 def create_window():
-    global label
+    global label, category_buttons, frame, current_category
     root = tk.Tk()
     root.title("5x5 Grid Window - Marine Style")
     root.geometry("1920x1080")
-    root.configure(bg="#1E3F66") 
+    root.configure(bg="#1E3F66")  # Темно-синий фон
     root.update_idletasks()
 
     window_width = 1920
@@ -105,6 +126,9 @@ def create_window():
                             font=("Arial", 14, "bold"),
                             command=lambda i=i, j=j, points=points[i-1]: on_button_click(i, j, points))
             btn.grid(row=i, column=j, padx=5, pady=5)
+
+            # Добавляем кнопку в словарь
+            category_buttons[(i, j)] = category_buttons.get((i, j), []) + [btn]
 
     label = tk.Label(root, text="", font=("Arial", 22), bg="#1E3F66", fg="white")  
     label.pack(pady=20)
