@@ -1,7 +1,25 @@
 import tkinter as tk
+import pygame
+
+# Инициализация pygame mixer для работы с аудио
+pygame.mixer.init()
+
+# Флаг для отслеживания, воспроизводится ли звук
+is_playing = False
+
+# Функция для воспроизведения и остановки звука
+def toggle_audio():
+    global is_playing
+    if is_playing:
+        pygame.mixer.music.stop()  # Остановить воспроизведение
+        is_playing = False
+    else:
+        pygame.mixer.music.load("Chiken.mp3")  # Загрузить файл
+        pygame.mixer.music.play()  # Воспроизвести
+        is_playing = True
 
 questions = {
-     (1, 0): [("🦁👑", " Король Лев")],
+    (1, 0): [("🦁👑", " Король Лев")],
     (2, 0): [("🚀🤠🦖", "История игрушек")],
     (3, 0): [("🏠🎈👴🏼👦", "Вверх")],
     (4, 0): [("🧞‍♂️🕌🐒", "Аладдин")],
@@ -13,7 +31,7 @@ questions = {
     (5, 3): [("Сколько было колен Израиля?", "12"),("Какой Еврейский храм был последний?", "Второй Храм, храм Давида"),("Как звали короля из свитка Эстер, которого сравнивают с индюком?", "Ахашверош")],
     (1, 2): [("Как зовут мадрихов нашей команды?", "Ярик, Слава, Соня, Ариана, Роберта, Сима, Бека"),],
     (2, 2): [("Заматайте любого участника вашей команды в туалетку на скорость!", "Молодцы!"),],
-    (3, 2): [("О чем была прошлая программа?", "Ту би Шват"),],
+    (3, 2): [("О чем была прошлая программа?", "Ту би Шват"),], 
     (4, 2): [("Какая команда активнее станцует - получит баллы", "Молодцы!"),],
     (5, 2): [("Сделайте импровизацию Адам, Ева и яблоко, кто-то Адам, кто-то Ева, кто-то яблоко", "Молодцы!"),],   
 }
@@ -27,7 +45,6 @@ current_category = None
 
 def show_next_question(event, popup_window):
     global question_index, show_answer
-    # Проверка, если есть вопросы для отображения
     if question_index < len(current_questions):
         if show_answer:
             popup_window.label.config(text=f"Ответ: {current_questions[question_index][1]}")
@@ -37,34 +54,27 @@ def show_next_question(event, popup_window):
         show_answer = not show_answer
     else:
         popup_window.label.config(text="Все вопросы пройдены!")
-        hide_category_buttons(current_category)  # Прячем кнопки категории, когда все вопросы пройдены
-        popup_window.after(2000, popup_window.destroy)  # Закрыть окно через 2 секунды
+        hide_category_buttons(current_category)
+        popup_window.after(2000, popup_window.destroy)
 
 def hide_category_buttons(category):
-    # Проверяем, существует ли ключ в category_buttons
     if category in category_buttons:
         for button in category_buttons[category]:
             button.grid_forget()
-    else:
-        print(f"Ключ {category} не найден в category_buttons!")
 
 def on_button_click(row, col, points):
     global current_questions, question_index, show_answer, current_category
-    # Используем кортеж (row, col) для получения правильной категории
     current_category = (row, col)
 
-    # Проверяем, есть ли вопросы в выбранной категории
     if (row, col) in questions:
         current_questions = questions[(row, col)]
         question_index = 0
         show_answer = False
 
-        # Открываем новое окно для отображения вопросов и ответов
-        popup_window = tk.Toplevel()  # Создаем новое окно
+        popup_window = tk.Toplevel()
         popup_window.title(f"Вопросы категории {row},{col}")
         popup_window.geometry("720x1280")
 
-        # Центрируем окно на экране
         window_width = 1280
         window_height = 400
         screen_width = popup_window.winfo_screenwidth()
@@ -79,17 +89,17 @@ def on_button_click(row, col, points):
                                       font=("Arial", 20), bg="#1E3F66", fg="white")
         popup_window.label.pack(pady=20)
         
-        popup_window.bind("<space>", lambda event, win=popup_window: show_next_question(event, win))  # Обработка пробела для переключения вопросов
+        popup_window.bind("<space>", lambda event, win=popup_window: show_next_question(event, win))
         
-        # После завершения всех вопросов в категории, закроется окно
-        show_next_question(None, popup_window)  # Начать с первого вопроса
+        # После открытия окна, сразу показываем первый вопрос
+        show_next_question(None, popup_window)
 
 def create_window():
     global label, category_buttons, frame, current_category
     root = tk.Tk()
     root.title("5x5 Grid Window - Marine Style")
     root.geometry("1920x1080")
-    root.configure(bg="#1E3F66")  # Темно-синий фон
+    root.configure(bg="#1E3F66")
     root.update_idletasks()
 
     window_width = 1920
@@ -113,7 +123,7 @@ def create_window():
                                 font=("Arial", 14, "bold"))
         label_header.grid(row=0, column=j, padx=5, pady=5)
 
-    points = [100, 200, 300, 400, 500]  
+    points = [100, 200, 300, 400, 500]
     for i in range(1, 6): 
         for j in range(5):
             btn_text = f"{points[i-1]}" 
@@ -123,11 +133,13 @@ def create_window():
                             command=lambda i=i, j=j, points=points[i-1]: on_button_click(i, j, points))
             btn.grid(row=i, column=j, padx=5, pady=5)
 
-            # Добавляем кнопку в словарь
             category_buttons[(i, j)] = category_buttons.get((i, j), []) + [btn]
 
     label = tk.Label(root, text="", font=("Arial", 22), bg="#1E3F66", fg="white")  
     label.pack(pady=20)
+
+    # Связываем клавишу "S" с функцией toggle_audio
+    root.bind("<s>", lambda event: toggle_audio())
 
     root.mainloop()
 
