@@ -12,5 +12,17 @@
   
   #  "b": "https://www.youtube.com/watch?v=fLTjpMOruhI"
 
+  #   "s": "Chiken.mp3",
+
+  #  "q": "Sigma.mp3",
+  
+  #  "w": "Barabulka.mp3",
+  
+  #  "e": "Trator.mp3",
+  
+  #  "r": "Shark.mp3",
+  
+  #  "t": "CuteBoy.mp3",
+
 Links for dev: 
   https://docs.google.com/document/d/1mdRyjbe07IIhSQ6JKSVLc8HvjG81f2iqz2IAU4bpCrQ/edit?tab=t.81zumfa8e2ik
