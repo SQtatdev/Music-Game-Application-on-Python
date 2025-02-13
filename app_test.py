@@ -5,10 +5,17 @@ import os
 import sys
 from PIL import Image, ImageTk
 
+<<<<<<< HEAD
+if sys.platform == 'win32':
+    pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
+else:
+    pygame.mixer.init()
+=======
 # if sys.platform == 'win32':
 #     pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)  # Adjust for Windows
 # else:
 #     pygame.mixer.init()  # Default init for macOS
+>>>>>>> 72b102a50411b6a22b355e84eea825798f125dac
 
 is_playing = False
 video_opened = False
@@ -21,6 +28,44 @@ video_urls = {
     "b": "https://www.youtube.com/watch?v=fLTjpMOruhI"
 }
 
+<<<<<<< HEAD
+sounds = {
+    "s": "Chiken.mp3",
+
+    "q": "Sigma.mp3",
+    "w": "Barabulka.mp3",
+    "e": "Trator.mp3",
+    "r": "Shark.mp3",
+    "t": "CuteBoy.mp3",
+}
+
+def play_or_stop_sound(event):
+    global current_sound
+
+    key = event.keysym.lower()
+    if key in sounds:
+        audio_file = os.path.join("assets", sounds[key])
+
+        if os.path.isfile(audio_file):
+            try:
+                if pygame.mixer.music.get_busy() and current_sound == audio_file:
+                    pygame.mixer.music.stop()
+                    current_sound = None  # Очищаем текущий звук
+                else:
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load(audio_file)
+                    pygame.mixer.music.play()
+                    current_sound = audio_file
+            except Exception as e:
+                print(f"Ошибка при воспроизведении {audio_file}: {e}")
+        else:
+            print(f"Файл {audio_file} не найден!")
+
+
+def open_video(event):
+    """Открывает YouTube-видео по клавише."""
+    key = event.keysym.lower()
+=======
 def toggle_audio():
     global is_playing
     try:
@@ -41,19 +86,29 @@ def toggle_audio():
 
 def open_video(event):
     key = event.keysym.lower() 
+>>>>>>> 72b102a50411b6a22b355e84eea825798f125dac
     url = video_urls.get(key)
     if url:
         webbrowser.open(url)
     else:
         print(f"Видео для клавиши '{key}' не найдено.")
 
-# Вопросы и ответы
 questions = {
     (1, 0): [("🦁👑", "Король Лев")],
     (2, 0): [("🚀🤠🦖", "История игрушек")],
     (3, 0): [("🏠🎈👴🏼👦", "Вверх")],
     (4, 0): [("🧞‍♂️🕌🐒", "Аладдин")],
     (5, 0): [("🐉👧⚔️", "Мулан")],
+<<<<<<< HEAD
+
+    (1, 1): [("Угадайте Песню Q", "Sigma Boy")],
+    (2, 1): [("Угадайте Песню W", "Барабулька")],
+    (3, 1): [("Угадайте Песню E", "Синий Трактор")],
+    (4, 1): [("Угадайте Песню R", "Baby Shark")],
+    (5, 1): [("Угадайте Песню T", "Cute Boy")],
+
+=======
+>>>>>>> 72b102a50411b6a22b355e84eea825798f125dac
     (1, 3): [("Что носят евреи мужчины на голове?", "Кипа"), ("Что идет раньше: Шаббат или Авдала?", "Шаббат"), ("Сколько хал обычно на шаббатнем столе?", "Две")],
     (2, 3): [("Как называется правильное питание у евреев?", "Кошрут"), ("Кто взрослеет раньше, мальчики или девочки?", "Девочки"), ("Как звали жену Адама?", "Ева")],
     (3, 3): [("Кто спас всех животных от потопа?", "Ной"), ("Как звали первого человека?", "Адам"), ("Как звали первого еврея?", "Авраам")],
@@ -214,6 +269,13 @@ def create_window():
     label = tk.Label(root, text="", font=("Arial", 22), bg="#1E3F66", fg="white")  
     label.pack(pady=20)
 
+<<<<<<< HEAD
+    for key in sounds.keys():
+        root.bind(f"<{key}>", play_or_stop_sound)
+
+    for key in video_urls.keys():
+        root.bind(f"<{key}>", open_video)
+=======
     root.bind("<s>", lambda event: toggle_audio())
 
     root.bind("<z>", open_video)
@@ -221,6 +283,7 @@ def create_window():
     root.bind("<c>", open_video)
     root.bind("<v>", open_video)
     root.bind("<b>", open_video)
+>>>>>>> 72b102a50411b6a22b355e84eea825798f125dac
     
     root.mainloop()
 
