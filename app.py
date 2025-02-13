@@ -5,18 +5,11 @@ import os
 import sys
 from PIL import Image, ImageTk
 
-<<<<<<< HEAD
 if sys.platform == 'win32':
     pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
 else:
     pygame.mixer.init()
-=======
-# if sys.platform == 'win32':
-#     pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)  # Adjust for Windows
-# else:
-#     pygame.mixer.init()  # Default init for macOS
->>>>>>> 72b102a50411b6a22b355e84eea825798f125dac
-
+    
 is_playing = False
 video_opened = False
 
