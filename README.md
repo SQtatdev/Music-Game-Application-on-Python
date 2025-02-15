@@ -29,3 +29,8 @@
 Links for dev: 
   https://docs.google.com/document/d/1mdRyjbe07IIhSQ6JKSVLc8HvjG81f2iqz2IAU4bpCrQ/edit?tab=t.81zumfa8e2ik
 
+pip install tkinter pygame pillow
+sudo apt-get install python3-tk
+and download python
+
+
