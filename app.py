@@ -239,8 +239,8 @@ def create_window():
 
     for j in range(5):
         label_header = tk.Label(frame, text=headers[j], width=20, height=4,
-                                bg=button_colors[0], fg="#FF7F50", 
-                                font=("Arial", 14, "bold"))
+                                bg=button_colors[0], fg="#02051a", 
+                                font=("Arial", 18, "bold"))
         label_header.grid(row=0, column=j, padx=5, pady=5)
 
     points = [100, 200, 300, 400, 500]
